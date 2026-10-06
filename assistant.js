@@ -49,7 +49,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     ];
 
-    // Protect normalize against null/undefined and normalize accents correctly
     const normalize = (value) => (value || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
     const money = (value) => typeof value === "number" ? `$${value.toLocaleString("es-AR")}` : value;
 
@@ -70,11 +69,23 @@ document.addEventListener("DOMContentLoaded", () => {
         const urgency = urgentWords.some(w => normalized.includes(normalize(w))) ? "Alta" :
                         mediumWords.some(w => normalized.includes(normalize(w))) ? "Media" : "Normal";
         const confidence = Math.min(96, 58 + bestScore * 12 + (text.length > 35 ? 6 : 0));
-        const workers = (window.AppState?.workers || []).filter(w => w.category === best.category).sort((a,b) => b.rating - a.rating);
+
+        const matchingRequest = {
+            category: best.category,
+            skills: matchedWords
+        };
+        const ranked = window.ChangaDomain
+            ? window.ChangaDomain.rankWorkers(matchingRequest, window.AppState?.workers || [])
+            : (window.AppState?.workers || [])
+                .filter(w => w.category === best.category)
+                .sort((a,b) => b.rating - a.rating)
+                .map(worker => ({ worker, score: Math.round((worker.rating || 0) * 20), reasons: {} }));
+
         const reason = matchedWords.length
             ? `Detecté ${matchedWords.map(w => `“${w}”`).join(", ")} y las asocié con ${best.label}.`
             : `No encontré señales específicas; usé ${best.label} como categoría de respaldo para continuar el flujo.`;
-        return { ...best, urgency, confidence, workers, text, matchedWords, reason, createdAt: new Date().toISOString() };
+
+        return { ...best, urgency, confidence, ranked, text, matchedWords, reason, createdAt: new Date().toISOString() };
     }
 
     function applyCategory(category) {
@@ -85,8 +96,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function render(data) {
-        const recommended = (data.workers && data.workers.length) ? data.workers[0] : null;
+        const recommendedMatch = data.ranked?.[0] || null;
+        const recommended = recommendedMatch?.worker || null;
         const priceRange = data.price || [5000, 20000];
+        const availabilityLabel = recommended?.availability === 'available' ? 'Disponible' :
+            recommended?.availability === 'maybe' ? 'A consultar' :
+            recommended?.availability === 'busy' ? 'Ocupado' : 'Disponibilidad no informada';
 
         result.innerHTML = `
             <div class="ai-result-title"><i data-lucide="${data.icon || 'sparkles'}"></i>
@@ -103,9 +118,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 <div><small>Rango orientativo</small><strong>${money(priceRange[0])} – ${money(priceRange[1])}</strong></div>
                 <div><small>Confianza</small><strong>${data.confidence}%</strong></div>
             </div>
-            ${recommended ? `<div class="ai-recommendation"><span>Mejor coincidencia</span>
+            ${recommended ? `<div class="ai-recommendation"><span>Mejor coincidencia · ${recommendedMatch.score}% match</span>
                 <strong>${recommended.name}</strong>
-                <small>${recommended.specialty} · ⭐ ${recommended.rating} · ${money(recommended.price)}</small>
+                <small>${recommended.specialty} · ${availabilityLabel} · ⭐ ${recommended.rating} · ${recommended.distance}</small>
+                <small>Compatibilidad explicable: rubro ${recommendedMatch.reasons.category ?? '—'}% · disponibilidad ${recommendedMatch.reasons.availability ?? '—'}% · cercanía ${recommendedMatch.reasons.distance ?? '—'}%</small>
             </div>` : ''}
             <div style="margin-top:.75rem;">
                 <button class="btn btn-primary btn-block" id="btn-show-ai-workers" type="button">Ver profesionales recomendados</button>
