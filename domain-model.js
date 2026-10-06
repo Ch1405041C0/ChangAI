@@ -18,6 +18,18 @@
         FAILED: 'failed'
     });
 
+    const JOB_EVENT = Object.freeze({
+        STATUS_CHANGED: 'status_changed',
+        WORKER_SUGGESTED: 'worker_suggested',
+        WORKER_SELECTED: 'worker_selected',
+        WORKER_ACCEPTED: 'worker_accepted',
+        MILESTONE_COMPLETED: 'milestone_completed',
+        CLIENT_CONFIRMED: 'client_confirmed',
+        PAYMENT_RECORDED: 'payment_recorded',
+        CONTRIBUTION_RECORDED: 'contribution_recorded',
+        EXPERIENCE_ACCRUED: 'experience_accrued'
+    });
+
     const STATUS_TRANSITIONS = Object.freeze({
         [JOB_STATUS.PUBLISHED]: [JOB_STATUS.MATCHED, JOB_STATUS.CANCELLED],
         [JOB_STATUS.MATCHED]: [JOB_STATUS.AGREED, JOB_STATUS.PUBLISHED, JOB_STATUS.CANCELLED],
@@ -27,6 +39,56 @@
         [JOB_STATUS.CANCELLED]: [],
         [JOB_STATUS.FAILED]: []
     });
+
+    function createEvent(type, data = {}, meta = {}) {
+        return {
+            id: meta.id || `evt-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+            type,
+            at: meta.at || new Date().toISOString(),
+            actor: meta.actor || null,
+            data,
+            evidence: Array.isArray(meta.evidence) ? meta.evidence : []
+        };
+    }
+
+    function normalizeEvent(event) {
+        if (!event || typeof event !== 'object') return null;
+
+        if (event.type) {
+            return {
+                id: event.id || `evt-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+                type: event.type,
+                at: event.at || new Date().toISOString(),
+                actor: event.actor || null,
+                data: event.data && typeof event.data === 'object' ? event.data : {},
+                evidence: Array.isArray(event.evidence) ? event.evidence : []
+            };
+        }
+
+        if (event.from || event.to) {
+            return createEvent(
+                JOB_EVENT.STATUS_CHANGED,
+                { from: event.from || null, to: event.to || null },
+                {
+                    id: event.id,
+                    at: event.at,
+                    actor: event.actor || null,
+                    evidence: event.evidence || []
+                }
+            );
+        }
+
+        return null;
+    }
+
+    function appendJobEvent(job, type, data = {}, meta = {}) {
+        const normalized = normalizeJob(job);
+        const event = createEvent(type, data, meta);
+        return {
+            ...normalized,
+            history: [...normalized.history, event]
+        };
+    }
 
     function normalizeWorker(worker) {
         const expertise = Array.isArray(worker.expertise) && worker.expertise.length
@@ -51,10 +113,15 @@
             pending: JOB_STATUS.PUBLISHED,
             completed: JOB_STATUS.COMPLETED
         };
+        const history = Array.isArray(job.history)
+            ? job.history.map(normalizeEvent).filter(Boolean)
+            : [];
+
         return {
             ...job,
             status: statusMap[job.status] || job.status || JOB_STATUS.PUBLISHED,
-            history: Array.isArray(job.history) ? job.history : []
+            history,
+            milestones: Array.isArray(job.milestones) ? job.milestones : []
         };
     }
 
@@ -140,17 +207,34 @@
         if (!canTransition(normalized, nextStatus)) {
             throw new Error(`Transición inválida: ${normalized.status} → ${nextStatus}`);
         }
-        const event = {
-            from: normalized.status,
-            to: nextStatus,
-            at: new Date().toISOString(),
-            ...meta
-        };
+
+        const event = createEvent(
+            JOB_EVENT.STATUS_CHANGED,
+            { from: normalized.status, to: nextStatus },
+            meta
+        );
+
         return {
             ...normalized,
             status: nextStatus,
             history: [...normalized.history, event]
         };
+    }
+
+    function completeMilestone(job, milestoneId, meta = {}) {
+        const normalized = normalizeJob(job);
+        const milestones = normalized.milestones.map(milestone => (
+            milestone.id === milestoneId
+                ? { ...milestone, status: 'completed', completedAt: meta.at || new Date().toISOString() }
+                : milestone
+        ));
+
+        return appendJobEvent(
+            { ...normalized, milestones },
+            JOB_EVENT.MILESTONE_COMPLETED,
+            { milestoneId },
+            meta
+        );
     }
 
     function hydrateState(state) {
@@ -163,13 +247,18 @@
     window.ChangaDomain = {
         AVAILABILITY,
         JOB_STATUS,
+        JOB_EVENT,
         STATUS_TRANSITIONS,
+        createEvent,
+        normalizeEvent,
+        appendJobEvent,
         normalizeWorker,
         normalizeJob,
         scoreWorker,
         rankWorkers,
         canTransition,
         transitionJob,
+        completeMilestone,
         hydrateState
     };
 })();
