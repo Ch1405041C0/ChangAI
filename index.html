@@ -178,345 +178,75 @@
                                 
                                 <div class="ai-assistant-card" id="ai-assistant-card">
                                     <div class="ai-assistant-header">
+                                        <div class="ai-icon"><i data-lucide="bot"></i></div>
                                         <div>
-                                            <span class="ai-kicker"><i data-lucide="sparkles"></i> Asistente IA</span>
-                                            <h3>Contame qué necesitás</h3>
+                                            <strong>Asistente Chang@</strong>
+                                            <small>Contame qué necesitás en lenguaje natural</small>
                                         </div>
-                                        <span class="ai-status">Activo</span>
                                     </div>
-                                    <textarea id="ai-job-description" rows="3" placeholder="Ej.: Pierde agua debajo de la pileta y necesito arreglarlo mañana."></textarea>
-                                    <div class="ai-actions">
-                                        <button class="btn btn-primary" id="btn-analyze-job" type="button">
-                                            <i data-lucide="brain-circuit"></i> Analizar pedido
-                                        </button>
-                                        <button class="btn btn-secondary" id="btn-ai-example" type="button">Usar ejemplo</button>
-                                    </div>
-                                    <div id="ai-result" class="ai-result hidden" aria-live="polite"></div>
-                                    <p class="ai-disclaimer">Prototipo académico: analiza el texto mediante reglas explicables y memoria local.</p>
+                                    <textarea id="ai-job-request" rows="3" placeholder="Ej: Necesito alguien que arregle una pérdida de agua debajo de la pileta mañana después de las 15."></textarea>
+                                    <button class="btn btn-primary btn-block" id="btn-ai-analyze" type="button"><i data-lucide="sparkles"></i> Analizar necesidad</button>
+                                    <div id="ai-analysis-result" class="ai-analysis-result hidden"></div>
                                 </div>
 
                                 <div class="category-chips" id="category-chips">
                                     <button class="chip active" data-cat="all">Todos</button>
-                                    <button class="chip" data-cat="plumber"><i data-lucide="wrench"></i> Plomería</button>
-                                    <button class="chip" data-cat="electrician"><i data-lucide="zap"></i> Electricidad</button>
-                                    <button class="chip" data-cat="cleaning"><i data-lucide="sparkles"></i> Limpieza</button>
-                                    <button class="chip" data-cat="gardening"><i data-lucide="flower"></i> Jardinería</button>
-                                    <button class="chip" data-cat="pets"><i data-lucide="dog"></i> Mascotas</button>
+                                    <button class="chip" data-cat="plumber">Plomería</button>
+                                    <button class="chip" data-cat="electrician">Electricidad</button>
+                                    <button class="chip" data-cat="cleaning">Limpieza</button>
+                                    <button class="chip" data-cat="pets">Mascotas</button>
+                                    <button class="chip" data-cat="gardening">Jardinería</button>
                                 </div>
                             </div>
                             
-                            <!-- Active Request / Match Panel -->
-                            <div class="match-panel-container">
-                                <!-- Default Prompt -->
-                                <div id="match-prompt" class="card empty-state-card">
-                                    <div class="empty-icon"><i data-lucide="navigation"></i></div>
-                                    <p>Seleccioná un profesional en el mapa o buscá una categoría para ver los changadores disponibles en tu zona.</p>
-                                </div>
-                                
-                                <!-- Worker Detail Card -->
-                                <div id="worker-detail-card" class="card worker-card hidden">
-                                    <div class="worker-card-header">
-                                        <div class="worker-avatar">
-                                            <img id="detail-avatar" src="" alt="Avatar">
-                                        </div>
-                                        <div class="worker-meta">
-                                            <h3 id="detail-name">Juan Pérez</h3>
-                                            <span class="rating"><i data-lucide="star"></i> <span id="detail-rating">4.8</span> (<span id="detail-jobs-count">120</span> changas)</span>
-                                            <span class="specialty-badge" id="detail-specialty">Plomero Matriculado</span>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="worker-stats">
-                                        <div class="stat">
-                                            <span class="stat-label">Distancia</span>
-                                            <span class="stat-value" id="detail-distance">1.2 km</span>
-                                        </div>
-                                        <div class="stat">
-                                            <span class="stat-label">Tarifa base</span>
-                                            <span class="stat-value" id="detail-price">$8.500</span>
-                                        </div>
-                                        <div class="stat">
-                                            <span class="stat-label">Monotributo</span>
-                                            <span class="stat-value status-badge ok" id="detail-tax">Categoría C</span>
-                                        </div>
-                                    </div>
-                                    
-                                    <p class="worker-bio" id="detail-bio">Especialista en reparaciones de humedad, cañerías de termofusión e instalaciones de sanitarios. 10 años de experiencia.</p>
-                                    
-                                    <button class="btn btn-primary btn-block" id="btn-request-job">
-                                        <i data-lucide="navigation"></i> Solicitar Changa Ya
-                                    </button>
-                                </div>
-
-                                <!-- Ride/Trip Progress panel -->
-                                <div id="trip-progress-card" class="card trip-card hidden">
-                                    <div class="trip-header">
-                                        <span class="trip-status-badge animated" id="trip-status-text">Buscando confirmación...</span>
-                                        <div class="loader-bar"><div class="loader-progress" id="trip-progress-bar"></div></div>
-                                    </div>
-                                    
-                                    <div class="trip-body">
-                                        <div class="trip-worker-info">
-                                            <img id="trip-avatar" src="" alt="Avatar">
-                                            <div>
-                                                <h4 id="trip-worker-name">Juan Pérez</h4>
-                                                <p id="trip-worker-phone"><i data-lucide="phone"></i> +54 9 11 5555-1234</p>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="trip-timeline">
-                                            <div class="timeline-step done" id="step-req">
-                                                <div class="step-dot"></div>
-                                                <span class="step-label">Solicitud enviada</span>
-                                            </div>
-                                            <div class="timeline-step" id="step-route">
-                                                <div class="step-dot"></div>
-                                                <span class="step-label">En camino (Est. 5 min)</span>
-                                            </div>
-                                            <div class="timeline-step" id="step-work">
-                                                <div class="step-dot"></div>
-                                                <span class="step-label">Trabajo en curso</span>
-                                            </div>
-                                            <div class="timeline-step" id="step-done">
-                                                <div class="step-dot"></div>
-                                                <span class="step-label">Finalizado</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="trip-actions">
-                                        <button class="btn btn-danger-outline btn-block" id="btn-cancel-trip">Cancelar Solicitud</button>
-                                        <button class="btn btn-success btn-block hidden" id="btn-complete-trip">Confirmar Finalización</button>
-                                    </div>
-                                </div>
-                            </div>
+                            <!-- Dynamic worker detail/results area -->
+                            <div id="worker-results"></div>
                         </div>
-                        
-                        <!-- Leaflet Map Container -->
-                        <div class="map-view-wrapper">
+
+                        <div class="map-wrapper">
                             <div id="map"></div>
-                            <!-- Live status indicator -->
-                            <div class="map-overlay-badge hidden" id="map-indicator">
-                                <span class="pulse-dot"></span>
-                                <span id="map-indicator-text">Simulando trayecto...</span>
-                            </div>
+                            <img src="./map-fallback.png" alt="Mapa ilustrativo" class="map-fallback-image">
                         </div>
                     </div>
                 </section>
 
-                <!-- 2. MIS CHANGAS SECTION -->
+                <!-- 2. CHANGAS SECTION -->
                 <section id="changas-section" class="app-view">
                     <div class="section-container">
                         <div class="section-header-row">
                             <div>
-                                <h2 id="changas-title">Historial de Changas</h2>
-                                <p class="section-subtitle" id="changas-subtitle">Gestioná tus contratos, facturación y pagos realizados</p>
-                            </div>
-                            <div class="filter-actions">
-                                <button class="btn btn-secondary" id="btn-export-history"><i data-lucide="download"></i> Exportar CSV</button>
+                                <h2>Mis Changas</h2>
+                                <p class="section-subtitle">Tu trabajo cuenta. Tu historia crece.</p>
                             </div>
                         </div>
-                        
-                        <div class="changas-table-card card">
-                            <div class="table-responsive">
-                                <table class="custom-table">
-                                    <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Servicio / Rubro</th>
-                                            <th>Fecha</th>
-                                            <th>Profesional / Cliente</th>
-                                            <th>Monto</th>
-                                            <th>Estado</th>
-                                            <th>Aportes AFIP</th>
-                                            <th>Facturación</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="changas-history-tbody">
-                                        <!-- Dynamically loaded via app.js -->
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+                        <div id="changas-list" class="cards-list"></div>
                     </div>
                 </section>
 
-                <!-- 3. RECEIPTS SECTION (Monotributo & Invoices) -->
+                <!-- 3. RECEIPTS / MONOTRIBUTO SECTION -->
                 <section id="receipts-section" class="app-view">
                     <div class="section-container">
-                        <div class="receipts-grid">
-                            
-                            <!-- Left: Monotributo Overview Dashboard -->
-                            <div class="receipts-dashboard">
-                                <div class="card card-gradient">
-                                    <div class="card-gradient-content">
-                                        <span class="tax-tag">AFIP Monotributo</span>
-                                        <h2>Mi Estado Tributario</h2>
-                                        
-                                        <div class="monotributo-info-row">
-                                            <div class="info-block">
-                                                <span class="label">Categoría Actual</span>
-                                                <span class="value-highlight">B (Servicios)</span>
-                                            </div>
-                                            <div class="info-block">
-                                                <span class="label">Límite Anual</span>
-                                                <span class="value">$6.430.000 ARS</span>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="progress-container">
-                                            <div class="progress-bar-label">
-                                                <span>Facturado acumulado (últimos 12 meses)</span>
-                                                <span class="progress-percent" id="billing-percent">34%</span>
-                                            </div>
-                                            <div class="progress-bar-track">
-                                                <div class="progress-bar-fill" id="billing-progress-fill" style="width: 34%;"></div>
-                                            </div>
-                                            <div class="progress-sub-text">
-                                                Facturado: <strong id="billed-amount">$2.186.200</strong> de $6.430.000
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="card">
-                                    <h3>Mis Recibos Generados</h3>
-                                    <p class="card-subtitle">Descargá tus comprobantes oficiales de Factura C monotributista</p>
-                                    
-                                    <div class="receipts-list" id="generated-receipts-list">
-                                        <!-- Dynamically generated invoices -->
-                                    </div>
-                                </div>
+                        <div class="section-header-row">
+                            <div>
+                                <h2>Monotributo & Facturas</h2>
+                                <p class="section-subtitle">Comprobantes y formalización tributaria.</p>
                             </div>
-                            
-                            <!-- Right: Invoice Generator Form -->
-                            <div class="invoice-generator">
-                                <div class="card">
-                                    <div class="invoice-form-header">
-                                        <h3>Emitir Nueva Factura Electrónica</h3>
-                                        <span class="invoice-type">Factura C (AFIP)</span>
-                                    </div>
-                                    
-                                    <form id="invoice-form" class="custom-form">
-                                        <div class="form-group-row">
-                                            <div class="form-group">
-                                                <label for="inv-emitter-name">Emisor (Tus Datos)</label>
-                                                <input type="text" id="inv-emitter-name" value="Carlos Gómez" readonly>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="inv-emitter-cuit">CUIT Emisor</label>
-                                                <input type="text" id="inv-emitter-cuit" value="20-34981726-9" readonly>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="divider">Datos del Receptor (Cliente)</div>
-                                        
-                                        <div class="form-group-row">
-                                            <div class="form-group">
-                                                <label for="inv-client-name">Nombre o Razón Social</label>
-                                                <input type="text" id="inv-client-name" placeholder="Ej. Ana María Rodríguez" required>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="inv-client-cuit">CUIT / CUIL / DNI</label>
-                                                <input type="text" id="inv-client-cuit" placeholder="Ej. 27-28394817-2" required>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="form-group">
-                                            <label for="inv-client-iva">Condición frente al IVA</label>
-                                            <select id="inv-client-iva">
-                                                <option value="Consumidor Final">Consumidor Final</option>
-                                                <option value="Monotributista">Responsable Monotributo</option>
-                                                <option value="Inscripto">Responsable Inscripto</option>
-                                                <option value="Exento">Exento</option>
-                                            </select>
-                                        </div>
-                                        
-                                        <div class="divider">Detalle del Servicio</div>
-                                        
-                                        <div class="form-group">
-                                            <label for="inv-description">Descripción de la Changa</label>
-                                            <textarea id="inv-description" rows="2" placeholder="Ej. Reparación de filtración en cocina, cambio de caños de agua caliente y fría." required></textarea>
-                                        </div>
-                                        
-                                        <div class="form-group-row">
-                                            <div class="form-group">
-                                                <label for="inv-amount">Monto del Servicio ($ ARS)</label>
-                                                <input type="number" id="inv-amount" placeholder="Ej. 18500" min="100" required>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="inv-payment-method">Forma de Pago</label>
-                                                <select id="inv-payment-method">
-                                                    <option value="Transferencia">Transferencia Bancaria / Digital</option>
-                                                    <option value="Efectivo">Efectivo</option>
-                                                    <option value="Debito/Credito">Tarjeta de Débito/Crédito</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        
-                                        <button type="submit" class="btn btn-success btn-block" id="btn-emit-invoice">
-                                            <i data-lucide="file-check"></i> Emitir y Descargar Factura C
-                                        </button>
-                                    </form>
-                                </div>
-                            </div>
-                            
                         </div>
+                        <div id="receipts-content"></div>
                     </div>
                 </section>
 
                 <!-- 4. CONTRIBUTIONS SECTION -->
                 <section id="contributions-section" class="app-view">
                     <div class="section-container">
-                        
-                        <div class="contributions-layout">
-                            
-                            <!-- Left: Status and Information -->
-                            <div class="contributions-status-col">
-                                <div class="card">
-                                    <h3>Resumen de Cobertura</h3>
-                                    <p class="card-subtitle">Estado actual de tus aportes obligatorios y voluntarios</p>
-                                    
-                                    <div class="coverage-cards-grid">
-                                        <div class="coverage-status-card active">
-                                            <div class="icon-circle"><i data-lucide="shield-check"></i></div>
-                                            <div class="cov-details">
-                                                <h4>Obra Social</h4>
-                                                <p class="cov-name" id="cov-social-name">OSECAC (Comercio)</p>
-                                                <span class="status-indicator-badge success">Al día (Junio 2026)</span>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="coverage-status-card active">
-                                            <div class="icon-circle"><i data-lucide="users"></i></div>
-                                            <div class="cov-details">
-                                                <h4>Aporte Sindical</h4>
-                                                <p class="cov-name" id="cov-union-name">UOCRA (Construcción)</p>
-                                                <span class="status-indicator-badge success">Al día (Junio 2026)</span>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="coverage-status-card warning">
-                                            <div class="icon-circle"><i data-lucide="heart-handshake"></i></div>
-                                            <div class="cov-details">
-                                                <h4>Medicina Prepaga</h4>
-                                                <p class="cov-name" id="cov-prepaga-name">OSDE (Plan 210)</p>
-                                                <span class="status-indicator-badge warning">Vence en 5 días</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="contributions-history-wrapper">
-                                        <h4>Historial Reciente de Aportes</h4>
-                                        <div class="contributions-history-list" id="contributions-history-list">
-                                            <!-- Dynamically generated list of payments -->
-                                        </div>
-                                    </div>
-                                </div>
+                        <div class="section-header-row">
+                            <div>
+                                <h2>Aportes Sociales</h2>
+                                <p class="section-subtitle">Convertí cada trabajo en protección social.</p>
                             </div>
-                            
-                            <!-- Right: Contribution Payment Portal -->
-                            <div class="contributions-portal-col">
+                        </div>
+                        <div id="contributions-content">
+                            <div class="contributions-grid">
                                 <div class="card">
                                     <h3>Portal Integrado de Aportes</h3>
                                     <p class="card-subtitle">Realizá tus aportes a cualquier obra social, sindicato o medicina privada</p>
@@ -599,9 +329,7 @@
                                     </div>
                                 </div>
                             </div>
-                            
                         </div>
-                        
                     </div>
                 </section>
 
@@ -621,6 +349,7 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script src="./robustness.js"></script>
     <script src="./storage.js"></script>
+    <script src="./domain-model.js"></script>
     <script src="./app.js"></script>
     <script src="./map.js"></script>
     <script src="./assistant.js"></script>
