@@ -1,5 +1,5 @@
-// chang@ domain model inspired by lessons harvested from FACTTIC projects.
-// Keeps business decisions deterministic and explainable.
+// chang@ domain model.
+// Business rules are deterministic, explainable and specific to the chang@ workflow.
 
 (function () {
     const AVAILABILITY = Object.freeze({
