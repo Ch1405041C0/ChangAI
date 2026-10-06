@@ -17,339 +17,35 @@
 </head>
 <body class="dark-theme">
     <div class="app-container">
-        
-        <!-- Sidebar Navigation -->
         <aside class="sidebar">
-            <div class="logo-container">
-                <span class="logo-text">chang<span class="logo-accent">@</span></span>
-            </div>
-            
+            <div class="logo-container"><span class="logo-text">chang<span class="logo-accent">@</span></span></div>
             <nav class="nav-menu">
-                <a href="#agent-section" class="nav-item active" data-view="agent-section">
-                    <i data-lucide="brain-circuit"></i>
-                    <span>Motor Agéntico</span>
-                </a>
-                <a href="#map-section" class="nav-item" data-view="map-section">
-                    <i data-lucide="map-pin"></i>
-                    <span>Mapa Activo</span>
-                </a>
-                <a href="#changas-section" class="nav-item" data-view="changas-section">
-                    <i data-lucide="briefcase"></i>
-                    <span id="nav-changas-label">Mis Changas</span>
-                </a>
-                <a href="#receipts-section" class="nav-item" data-view="receipts-section">
-                    <i data-lucide="file-text"></i>
-                    <span id="nav-receipts-label">Monotributo & Facturas</span>
-                </a>
-                <a href="#contributions-section" class="nav-item" data-view="contributions-section">
-                    <i data-lucide="heart-pulse"></i>
-                    <span id="nav-contributions-label">Aportes Sociales</span>
-                </a>
+                <a href="#agent-section" class="nav-item active" data-view="agent-section"><i data-lucide="brain-circuit"></i><span>Motor Agéntico</span></a>
+                <a href="#map-section" class="nav-item" data-view="map-section"><i data-lucide="map-pin"></i><span>Mapa Activo</span></a>
+                <a href="#changas-section" class="nav-item" data-view="changas-section"><i data-lucide="briefcase"></i><span id="nav-changas-label">Mis Changas</span></a>
+                <a href="#receipts-section" class="nav-item" data-view="receipts-section"><i data-lucide="file-text"></i><span id="nav-receipts-label">Monotributo & Facturas</span></a>
+                <a href="#contributions-section" class="nav-item" data-view="contributions-section"><i data-lucide="heart-pulse"></i><span id="nav-contributions-label">Aportes Sociales</span></a>
             </nav>
-            
-            <button id="reset-demo-btn" class="reset-demo-btn" type="button" title="Borra los datos guardados y restaura la demostración">
-                <i data-lucide="rotate-ccw"></i>
-                <span>Reiniciar demostración</span>
-            </button>
-
-            <div class="user-profile-summary">
-                <div class="avatar">
-                    <img src="https://api.dicebear.com/7.x/bottts/svg?seed=carlos" alt="Carlos Avatar">
-                </div>
-                <div class="profile-info">
-                    <span class="profile-name">Carlos Gómez</span>
-                    <span class="profile-role">Changador • Cat. B</span>
-                </div>
-            </div>
+            <button id="reset-demo-btn" class="reset-demo-btn" type="button" title="Borra los datos guardados y restaura la demostración"><i data-lucide="rotate-ccw"></i><span>Reiniciar demostración</span></button>
+            <div class="user-profile-summary"><div class="avatar"><img src="https://api.dicebear.com/7.x/bottts/svg?seed=carlos" alt="Carlos Avatar"></div><div class="profile-info"><span class="profile-name">Carlos Gómez</span><span class="profile-role">Changador • Cat. B</span></div></div>
         </aside>
-
-        <!-- Main Content Area -->
         <main class="main-content">
-            
-            <!-- Header Bar -->
-            <header class="app-header">
-                <div class="header-left">
-                    <button class="mobile-menu-btn" id="mobile-menu-toggle">
-                        <i data-lucide="menu"></i>
-                    </button>
-                    <h1 class="current-view-title">Motor Agéntico</h1>
-                </div>
-                
-                <div class="header-right">
-                    <!-- Mode Selector (Cliente vs Changador) -->
-                    <div class="mode-toggle-container">
-                        <span class="mode-label active" id="label-client">Cliente</span>
-                        <div class="switch" id="mode-switch">
-                            <div class="switch-handle"></div>
-                        </div>
-                        <span class="mode-label" id="label-worker">Changador</span>
-                    </div>
-                    
-                    <!-- Notifications -->
-                    <div class="notification-bell" id="notif-btn">
-                        <i data-lucide="bell"></i>
-                        <span class="badge" id="notif-count">2</span>
-                        
-                        <div class="notif-dropdown hidden" id="notif-dropdown">
-                            <div class="notif-header">
-                                <h3>Notificaciones</h3>
-                                <button class="clear-notif-btn" id="clear-notif">Limpiar</button>
-                            </div>
-                            <div class="notif-list" id="notif-list">
-                                <!-- Notifications dynamically inserted here -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </header>
-
-            <!-- Dynamic Views -->
-            <div class="view-viewport">
-                
-                <!-- 0. MOTOR AGÉNTICO / DASHBOARD IA -->
-                <section id="agent-section" class="app-view active">
-                    <div class="section-container agent-dashboard">
-                        <div class="section-header-row">
-                            <div>
-                                <span class="agent-eyebrow"><i data-lucide="sparkles"></i> Sistema inteligente explicable</span>
-                                <h2>Motor Agéntico Chang@</h2>
-                                <p class="section-subtitle">Observa solicitudes, analiza necesidades, recomienda profesionales y conserva memoria para mejorar decisiones futuras.</p>
-                            </div>
-                            <span class="agent-live"><span class="pulse-dot"></span> Agente activo</span>
-                        </div>
-
-                        <div class="agent-metrics">
-                            <article class="card metric-card"><small>Análisis realizados</small><strong id="agent-analysis-count">0</strong><span>guardados en memoria local</span></article>
-                            <article class="card metric-card"><small>Casos en memoria</small><strong id="agent-memory-count">0</strong><span>changas + decisiones IA</span></article>
-                            <article class="card metric-card"><small>Confianza promedio</small><strong id="agent-confidence">—</strong><span>sobre recomendaciones</span></article>
-                            <article class="card metric-card"><small>Resolución registrada</small><strong id="agent-resolution">0%</strong><span>trabajos finalizados</span></article>
-                        </div>
-
-                        <div class="agent-dashboard-grid">
-                            <article class="card agent-cycle-card">
-                                <div class="card-heading"><div><small>Orquestación cíclica</small><h3>Ciclo de decisión</h3></div><i data-lucide="refresh-cw"></i></div>
-                                <div class="agent-cycle">
-                                    <div class="agent-step"><span>1</span><div><strong>Observación</strong><small>Captura el pedido del usuario</small></div></div>
-                                    <div class="agent-step"><span>2</span><div><strong>Análisis</strong><small>Detecta rubro, señales y urgencia</small></div></div>
-                                    <div class="agent-step"><span>3</span><div><strong>Planificación</strong><small>Estima duración, rango y prioridad</small></div></div>
-                                    <div class="agent-step"><span>4</span><div><strong>Acción</strong><small>Recomienda profesionales cercanos</small></div></div>
-                                    <div class="agent-step"><span>5</span><div><strong>Memoria</strong><small>Registra decisión y resultado</small></div></div>
-                                    <div class="agent-step"><span>6</span><div><strong>Aprendizaje</strong><small>Ajusta estadísticas futuras</small></div></div>
-                                </div>
-                            </article>
-
-                            <article class="card last-decision-card">
-                                <div class="card-heading"><div><small>IA explicable</small><h3>Última decisión</h3></div><i data-lucide="scan-search"></i></div>
-                                <div id="agent-last-decision" class="agent-empty">Todavía no hay análisis. Probá el asistente con una necesidad real.</div>
-                                <button class="btn btn-primary btn-block" id="agent-go-assistant" type="button"><i data-lucide="message-square-text"></i> Probar asistente</button>
-                            </article>
-                        </div>
-
-                        <article class="card agent-learning-card">
-                            <div class="card-heading"><div><small>Memoria persistente</small><h3>Aprendizaje por rubro</h3></div><span id="agent-memory-status">LocalStorage activo</span></div>
-                            <div id="agent-learning-bars" class="learning-bars"></div>
-                        </article>
-                    </div>
-                </section>
-
-                <!-- 1. MAP SECTION (Uber style) -->
-                <section id="map-section" class="app-view">
-                    <div class="map-layout">
-                        <div class="map-sidebar">
-                            
-                            <!-- Search & Filter Card -->
-                            <div class="search-card card">
-                                <h2 id="map-role-heading">¿Qué servicio necesitás?</h2>
-                                <p class="card-subtitle" id="map-role-subtitle">Conectando profesionales independientes al instante</p>
-                                
-                                <div class="search-input-wrapper">
-                                    <i data-lucide="search" class="search-icon"></i>
-                                    <input type="text" id="job-search" placeholder="Plomero, gasista, electricista, paseador...">
-                                </div>
-                                <div class="location-control" id="location-control">
-                                    <button class="btn btn-secondary location-button" id="btn-use-location" type="button">
-                                        <i data-lucide="locate-fixed"></i> Usar mi ubicación
-                                    </button>
-                                    <div class="location-copy">
-                                        <strong id="location-title">Ubicación alternativa activa</strong>
-                                        <span id="location-status">Recoleta, CABA. Podés habilitar tu ubicación real.</span>
-                                    </div>
-                                </div>
-                                
-                                <div class="ai-assistant-card" id="ai-assistant-card">
-                                    <div class="ai-assistant-header">
-                                        <div class="ai-icon"><i data-lucide="bot"></i></div>
-                                        <div>
-                                            <strong>Asistente Chang@</strong>
-                                            <small>Contame qué necesitás en lenguaje natural</small>
-                                        </div>
-                                    </div>
-                                    <textarea id="ai-job-request" rows="3" placeholder="Ej: Necesito alguien que arregle una pérdida de agua debajo de la pileta mañana después de las 15."></textarea>
-                                    <button class="btn btn-primary btn-block" id="btn-ai-analyze" type="button"><i data-lucide="sparkles"></i> Analizar necesidad</button>
-                                    <div id="ai-analysis-result" class="ai-analysis-result hidden"></div>
-                                </div>
-
-                                <div class="category-chips" id="category-chips">
-                                    <button class="chip active" data-cat="all">Todos</button>
-                                    <button class="chip" data-cat="plumber">Plomería</button>
-                                    <button class="chip" data-cat="electrician">Electricidad</button>
-                                    <button class="chip" data-cat="cleaning">Limpieza</button>
-                                    <button class="chip" data-cat="pets">Mascotas</button>
-                                    <button class="chip" data-cat="gardening">Jardinería</button>
-                                </div>
-                            </div>
-                            
-                            <!-- Dynamic worker detail/results area -->
-                            <div id="worker-results"></div>
-                        </div>
-
-                        <div class="map-wrapper">
-                            <div id="map"></div>
-                            <img src="./map-fallback.png" alt="Mapa ilustrativo" class="map-fallback-image">
-                        </div>
-                    </div>
-                </section>
-
-                <!-- 2. CHANGAS SECTION -->
-                <section id="changas-section" class="app-view">
-                    <div class="section-container">
-                        <div class="section-header-row">
-                            <div>
-                                <h2>Mis Changas</h2>
-                                <p class="section-subtitle">Tu trabajo cuenta. Tu historia crece.</p>
-                            </div>
-                        </div>
-                        <div id="changas-list" class="cards-list"></div>
-                    </div>
-                </section>
-
-                <!-- 3. RECEIPTS / MONOTRIBUTO SECTION -->
-                <section id="receipts-section" class="app-view">
-                    <div class="section-container">
-                        <div class="section-header-row">
-                            <div>
-                                <h2>Monotributo & Facturas</h2>
-                                <p class="section-subtitle">Comprobantes y formalización tributaria.</p>
-                            </div>
-                        </div>
-                        <div id="receipts-content"></div>
-                    </div>
-                </section>
-
-                <!-- 4. CONTRIBUTIONS SECTION -->
-                <section id="contributions-section" class="app-view">
-                    <div class="section-container">
-                        <div class="section-header-row">
-                            <div>
-                                <h2>Aportes Sociales</h2>
-                                <p class="section-subtitle">Convertí cada trabajo en protección social.</p>
-                            </div>
-                        </div>
-                        <div id="contributions-content">
-                            <div class="contributions-grid">
-                                <div class="card">
-                                    <h3>Portal Integrado de Aportes</h3>
-                                    <p class="card-subtitle">Realizá tus aportes a cualquier obra social, sindicato o medicina privada</p>
-                                    
-                                    <div class="portal-tabs">
-                                        <button class="portal-tab active" data-portal="social-security">
-                                            <i data-lucide="shield"></i> Obra Social
-                                        </button>
-                                        <button class="portal-tab" data-portal="union">
-                                            <i data-lucide="users"></i> Sindicato
-                                        </button>
-                                        <button class="portal-tab" data-portal="prepaid">
-                                            <i data-lucide="heart"></i> Prepaga
-                                        </button>
-                                    </div>
-                                    
-                                    <div class="portal-forms-container">
-                                        <form id="contribution-payment-form" class="custom-form">
-                                            <input type="hidden" id="contribution-type" value="Obra Social">
-                                            
-                                            <div class="form-group">
-                                                <label for="contribution-entity" id="entity-label">Seleccionar Obra Social</label>
-                                                <select id="contribution-entity" class="form-select">
-                                                    <!-- Dynamic options -->
-                                                </select>
-                                            </div>
-                                            
-                                            <div class="form-group">
-                                                <label for="contribution-cuit">CUIT del Beneficiario</label>
-                                                <input type="text" id="contribution-cuit" value="20-34981726-9" readonly>
-                                            </div>
-                                            
-                                            <div class="form-group-row">
-                                                <div class="form-group">
-                                                    <label for="contribution-period">Período de Pago</label>
-                                                    <select id="contribution-period">
-                                                        <option value="2026-06">Junio 2026</option>
-                                                        <option value="2026-07">Julio 2026</option>
-                                                        <option value="2026-08">Agosto 2026</option>
-                                                    </select>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="contribution-amount">Monto del Aporte ($ ARS)</label>
-                                                    <input type="number" id="contribution-amount" value="8200" required>
-                                                    <span class="input-helper" id="amount-helper">Aporte básico obligatorio según Monotributo Cat B</span>
-                                                </div>
-                                            </div>
-                                            
-                                            <div class="form-group">
-                                                <label>Método de Pago</label>
-                                                <div class="payment-methods-grid">
-                                                    <label class="pay-method-card active">
-                                                        <input type="radio" name="pay-method" value="mercado-pago" checked>
-                                                        <div class="pay-method-content">
-                                                            <i data-lucide="wallet"></i>
-                                                            <span>Mercado Pago</span>
-                                                        </div>
-                                                    </label>
-                                                    <label class="pay-method-card">
-                                                        <input type="radio" name="pay-method" value="transfer">
-                                                        <div class="pay-method-content">
-                                                            <i data-lucide="banknote"></i>
-                                                            <span>Transferencia</span>
-                                                        </div>
-                                                    </label>
-                                                    <label class="pay-method-card">
-                                                        <input type="radio" name="pay-method" value="card">
-                                                        <div class="pay-method-content">
-                                                            <i data-lucide="credit-card"></i>
-                                                            <span>Tarjeta</span>
-                                                        </div>
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            
-                                            <button type="submit" class="btn btn-primary btn-block" id="btn-pay-contribution">
-                                                <i data-lucide="credit-card"></i> Procesar Aporte y Confirmar Cobertura
-                                            </button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
+            <header class="app-header"><div class="header-left"><button class="mobile-menu-btn" id="mobile-menu-toggle"><i data-lucide="menu"></i></button><h1 class="current-view-title">Motor Agéntico</h1></div><div class="header-right"><div class="mode-toggle-container"><span class="mode-label client-label">Cliente</span><button class="mode-switch" id="mode-switch"><span class="switch-thumb"></span></button><span class="mode-label worker-label">Changador</span></div><div class="notification-wrapper"><button class="icon-btn" id="notif-btn"><i data-lucide="bell"></i><span class="notification-badge" id="notif-count">0</span></button><div class="notification-dropdown hidden" id="notif-dropdown"><div class="notif-header"><h3>Notificaciones</h3><button id="clear-notif">Limpiar</button></div><div class="notif-list" id="notif-list"></div></div></div></div></header>
+            <div class="content-wrapper">
+                <section id="agent-section" class="app-view active"><div class="agent-dashboard-container" id="agent-dashboard"></div></section>
+                <section id="map-section" class="app-view"><div id="map" class="uber-map"></div><div id="map-controls"></div></section>
+                <section id="changas-section" class="app-view"><div class="section-header"><h2>Historial de Changas</h2></div><div class="table-container"><table class="data-table"><thead><tr><th>ID</th><th>Servicio</th><th>Fecha</th><th>Contraparte</th><th>Monto</th><th>Estado</th><th>Factura</th></tr></thead><tbody id="changas-table-body"></tbody></table></div></section>
+                <section id="receipts-section" class="app-view"><div id="receipts-app"></div></section>
+                <section id="contributions-section" class="app-view"><div id="contributions-app"></div></section>
             </div>
-
         </main>
-        
     </div>
-
-    <!-- Hidden Printable AFIP Invoice Frame (For download emulation) -->
-    <div id="afip-invoice-print-container" class="hidden">
-        <!-- Structured Factura C template for downloading as PDF -->
-    </div>
-
-    <!-- App JavaScript files -->
-    <!-- Leaflet JS for Uber-like map -->
+    <div id="afip-invoice-print-container" class="hidden"></div>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script src="./robustness.js"></script>
     <script src="./storage.js"></script>
     <script src="./domain-model.js"></script>
+    <script src="./capacity.js"></script>
     <script src="./app.js"></script>
     <script src="./map.js"></script>
     <script src="./assistant.js"></script>
